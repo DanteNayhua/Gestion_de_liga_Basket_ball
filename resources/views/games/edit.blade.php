@@ -19,22 +19,24 @@
                     @method('PUT')
 
                     <div class="grid grid-cols-2 gap-6">
+                        <!-- Equipo Local -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Equipo Local</label>
                             <select name="home_team_id" class="w-full border border-gray-300 rounded-lg px-4 py-3" required>
                                 @foreach ($teams as $team)
-                                    <option value="{{ $team->id }}" {{ $team->id == $game->home_team_id ? 'selected' : '' }}>
+                                    <option value="{{ $team->id }}" @selected(old('home_team_id', $game->home_team_id) == $team->id)>
                                         {{ $team->name }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
 
+                        <!-- Equipo Visitante -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Equipo Visitante</label>
                             <select name="away_team_id" class="w-full border border-gray-300 rounded-lg px-4 py-3" required>
                                 @foreach ($teams as $team)
-                                    <option value="{{ $team->id }}" {{ $team->id == $game->away_team_id ? 'selected' : '' }}>
+                                    <option value="{{ $team->id }}" @selected(old('away_team_id', $game->away_team_id) == $team->id)>
                                         {{ $team->name }}
                                     </option>
                                 @endforeach
@@ -42,13 +44,15 @@
                         </div>
                     </div>
 
+                    <!-- Fecha y Hora -->
                     <div class="mt-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Fecha y Hora del Partido</label>
                         <input type="datetime-local" name="match_date" 
-                               value="{{ old('match_date', $game->match_date->format('Y-m-d\TH:i')) }}"
+                               value="{{ old('match_date', $game->match_date?->format('Y-m-d\TH:i')) }}"
                                class="w-full border border-gray-300 rounded-lg px-4 py-3" required>
                     </div>
 
+                    <!-- Marcador -->
                     <div class="grid grid-cols-2 gap-6 mt-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Puntos Local</label>
@@ -64,15 +68,19 @@
                         </div>
                     </div>
 
+                    <!-- Estado -->
                     <div class="mt-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
                         <select name="status" class="w-full border border-gray-300 rounded-lg px-4 py-3">
-                            <option value="programado" {{ $game->status == 'programado' ? 'selected' : '' }}>Programado</option>
-                            <option value="jugado" {{ $game->status == 'jugado' ? 'selected' : '' }}>Jugado</option>
-                            <option value="cancelado" {{ $game->status == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+                            @foreach(['programado' => 'Programado', 'jugado' => 'Jugado', 'cancelado' => 'Cancelado'] as $value => $label)
+                                <option value="{{ $value }}" @selected(old('status', $game->status) == $value)>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
 
+                    <!-- Botones de Acción -->
                     <div class="flex gap-4 mt-10">
                         <a href="{{ route('games.index') }}" 
                            class="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg font-medium">
